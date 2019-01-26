@@ -47,7 +47,7 @@ public class Main {
 	 * @throws ParseException
 	 * @throws IOException
 	 */
-	public static void main(String[] args) throws ParseException, IOException {
+	public static void main(String[] args) {
 
 		String data;
 		String sumsByDates;
