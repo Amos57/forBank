@@ -19,59 +19,62 @@ public class Main {
 		int count;
 		String tofile;
 
-		try {
-			if (args.length == 3) {
-				fromfile = args[0];
-				count = Integer.parseInt(args[1]);
-				tofile = args[2];
-			} else {
+	
+			if (args.length != 3) {
 				System.out.println("параметры для работы программы не заданы");
 				return;
-			}
-
+			} 
+                                fromfile = args[0];
+				count = Integer.parseInt(args[1]);
+				tofile = args[2];
 			/**
 			 * получение данных из файла
 			 * 
 			 */
-			List<Integer> pointes ;
+			List<Integer> offices ;
 			try(Stream<String> stream=Files
 					.lines(Paths.get(fromfile), StandardCharsets.UTF_8)){
 					
-				pointes=stream.flatMap(s -> Stream.of(s.split("\n")))
+				offices=stream.flatMap(s -> Stream.of(s.split("\n")))
 					.map(Integer::parseInt).collect(Collectors.toList());
-			}
+		
 
-			SimpleDateFormat dateFormat = new SimpleDateFormat(
-					"dd.MM.yyyy  HH:mm");
+			SimpleDateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy  HH:mm");
+					
 			
 			Calendar now = Calendar.getInstance();
-			long rangebegin = Timestamp.valueOf(
-					(now.get(Calendar.YEAR) - 1) + "-01-01 00:00:00").getTime();
 			
-			long rangeend = Timestamp.valueOf(
-					now.get(Calendar.YEAR) + "-01-01 00:00:00").getTime();
-			
+			//получаем начало прошлого года
+			long rangebegin = Timestamp.valueOf((now.get(Calendar.YEAR) - 1) + "-01-01 00:00:00").getTime();
+					
+	        // начало нынешнего
+			long rangeend = Timestamp.valueOf(now.get(Calendar.YEAR) + "-01-01 00:00:00").getTime();
+					
+		    // теперь разницу
 			long diff = rangeend - rangebegin + 1;
+			
+			//переменная для получения случайной даты и времени
 			long result;
 
-			Date d = new Date();
+			Date date = new Date();
 			StringBuilder sb = new StringBuilder();
 
 			for (int i = 1; i <= count; i++) {
 
 				result = rangebegin + random(diff);
-				d.setTime(result);
-				sb.append(new Deal(dateFormat.format(d), pointes.get(random(0,
-						pointes.size() - 1)), i, random(10000, 100000)));
+				date.setTime(result);
+				sb.append(new Deal(dateFormat.format(date), offices.get(random(0,
+						offices.size() - 1)), i, random(10000, 100000)));
 				sb.append("\r\n");
 
 			}
-
+            //запись в файл
 			Files.write(Paths.get(tofile), sb.toString().getBytes());
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-	}
+		}
+	
 
 	/**
 	 * 
